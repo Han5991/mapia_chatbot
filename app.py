@@ -1,20 +1,10 @@
 from flask import Flask, render_template, request
-# pip install flask-ngrok
-# from flask_ngrok import run_with_ngrok  # <-------1
-
 import os
-
-# pip install dialogflow
 from google.cloud import dialogflow_v2 as dfw
-# from google.cloud import dialogflow as dfw
 from google.api_core.exceptions import InvalidArgument
-
 from collections import OrderedDict
 
 app = Flask(__name__)
-
-
-# run_with_ngrok(app)  # <---- 2
 
 
 @app.route('/', methods=['GET', 'POST'])
@@ -22,10 +12,9 @@ def index_page_landing():
     if request.method == "POST":
         pass
     else:
-        return render_template('renewal_index.html', context=conversation_chatbot())
+        return render_template('chat.html', context=conversation_chatbot())
 
 
-# terminal에서 대화형 챗봇 흉내내기
 def conversation_chatbot():
     keys = []
     values = []
@@ -69,12 +58,11 @@ def chatbot_request(txt_input):
     return response.query_result.fulfillment_text
 
 
+@app.route('/input', methods=['POST'])
+def input():
+    print(request.get_text())  # parse as text
+    return 'OK', 200
+
+
 if __name__ == "__main__":
-    # 실행 시
-    # PermissionError: [Errno 13] Permission denied: '/var/folders/4w/7mc0wn_x6hg10_bw1777w_qc0000gn/T/ngrok/ngrok'
-    # 해당 폴더로 가서 chmod -R 775 ngrok
-    '''
-    이것도 안될 시,
-    run_with_ngrok(app) 주석처리
-    '''
-    app.run(debug=True, port=8081)
+    app.run()
