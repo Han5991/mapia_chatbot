@@ -8,58 +8,14 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='css/chat.css') }}">
     <script src="https://code.jquery.com/jquery-1.8.3.min.js"
             integrity="sha256-YcbK69I5IXQftf/mYD8WY0/KmEDCv1asggHpJk1trM8=" crossorigin="anonymous"></script>
-    <script href="{{ url_for('static', filename='js/chat.js') }}">
-        $(function () {
-            $("input[type='text']").keypress(function (e) {
-                function extracted(_class, _val) {
-                    $(".chat_wrap .inner").append('<div class="item ' + _class + '"><div class="box"><p class="msg">' + _val + '</p><span class="time">' + currentTime() + '</span></div></div>');
-                    let lastItem = $(".chat_wrap .inner").find(".item:last");
-                    setTimeout(function () {
-                        lastItem.addClass("on");
-                    }, 10);
-                    let position = lastItem.position().top + $(".chat_wrap .inner").scrollTop();
-                    $(".chat_wrap .inner").stop().animate({scrollTop: position}, 500);
-                }
-
-                if (e.keyCode == 13 && $(this).val().length) {
-                    let _val = $(this).val();
-                    {#let _class = $(this).attr("class");#}
-                    f(_val).then((value) => {
-                        extracted('mymsg', _val);
-                        extracted('yourmsg', value.response);
-                    });
-                    $(this).val('');
-                }
-            });
-        });
-
-        let currentTime = function () {
-            let date = new Date();
-            let hh = date.getHours();
-            let mm = date.getMinutes();
-            let apm = hh > 12 ? "오후" : "오전";
-            return apm + " " + hh + ":" + mm + "";
-        }
-
-        async function f(chat) {
-            return await fetch("http://127.0.0.1:5000", {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                body: JSON.stringify({
-                    input: chat
-                }),
-            }).then(response => response.json());
-        }
-
-    </script>
+    <script src="{{ url_for('static', filename='js/chat.js') }}"></script>
 </head>
 <body>
 <div class="chat_wrap">
     <div class="inner"></div>
-    <input type="text" class="mymsg" placeholder="내용 입력">
-    {#    <input type="text" class="yourmsg" placeholder="내용 입력">#}
+    <label>
+        <input type="text" class="mymsg" placeholder="내용 입력">
+    </label>
 </div>
 </body>
 </html>
