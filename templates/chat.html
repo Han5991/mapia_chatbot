@@ -11,19 +11,24 @@
     <script href="{{ url_for('static', filename='js/chat.js') }}">
         $(function () {
             $("input[type='text']").keypress(function (e) {
-                //f()
-                if (e.keyCode == 13 && $(this).val().length) {
-                    let _val = $(this).val();
-                    let _class = $(this).attr("class");
-                    $(this).val('');
+                function extracted(_class, _val) {
                     $(".chat_wrap .inner").append('<div class="item ' + _class + '"><div class="box"><p class="msg">' + _val + '</p><span class="time">' + currentTime() + '</span></div></div>');
-
                     let lastItem = $(".chat_wrap .inner").find(".item:last");
                     setTimeout(function () {
                         lastItem.addClass("on");
                     }, 10);
                     let position = lastItem.position().top + $(".chat_wrap .inner").scrollTop();
                     $(".chat_wrap .inner").stop().animate({scrollTop: position}, 500);
+                }
+
+                if (e.keyCode == 13 && $(this).val().length) {
+                    let _val = $(this).val();
+                    {#let _class = $(this).attr("class");#}
+                    f(_val).then((value) => {
+                        extracted('mymsg', _val);
+                        extracted('yourmsg', value.response);
+                    });
+                    $(this).val('');
                 }
             });
         });
@@ -36,16 +41,16 @@
             return apm + " " + hh + ":" + mm + "";
         }
 
-        function f() {
-            fetch("http://127.0.0.1:5000/input", {
+        async function f(chat) {
+            return await fetch("http://127.0.0.1:5000", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
                 },
                 body: JSON.stringify({
-                    input: $("input[type='text']").val()
+                    input: chat
                 }),
-            }).then((response) => console.log(response));
+            }).then(response => response.json());
         }
 
     </script>
@@ -54,7 +59,7 @@
 <div class="chat_wrap">
     <div class="inner"></div>
     <input type="text" class="mymsg" placeholder="내용 입력">
-    <input type="text" class="yourmsg" placeholder="내용 입력">
+    {#    <input type="text" class="yourmsg" placeholder="내용 입력">#}
 </div>
 </body>
 </html>

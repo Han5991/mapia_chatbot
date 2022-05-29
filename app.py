@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request
+from flask import Flask, render_template, request, jsonify
 import os
 from google.cloud import dialogflow_v2 as dfw
 from google.api_core.exceptions import InvalidArgument
@@ -10,25 +10,30 @@ app = Flask(__name__)
 @app.route('/', methods=['GET', 'POST'])
 def index_page_landing():
     if request.method == "POST":
-        pass
+        return chat_input()
     else:
-        return render_template('chat.html', context=conversation_chatbot())
+        return render_template('chat.html')
 
 
-def conversation_chatbot():
-    keys = []
-    values = []
+def chat_input():
+    response = chatbot_request(request.get_json()['input'])
+    return jsonify({"response": response})
 
-    request_text = input("request text : ")
 
-    while request_text != 'exit':
-        resp_text = chatbot_request(request_text)
-        keys.append(request_text)
-        values.append(resp_text)
-
-        request_text = input("request text : ")
-
-    return OrderedDict({key: val for key, val in zip(keys, values)})
+# def conversation_chatbot():
+#     keys = []
+#     values = []
+#
+#     request_text = input("request text : ")
+#
+#     while request_text != 'exit':
+#         resp_text = chatbot_request(request_text)
+#         keys.append(request_text)
+#         values.append(resp_text)
+#
+#         request_text = input("request text : ")
+#
+#     return OrderedDict({key: val for key, val in zip(keys, values)})
 
 
 def chatbot_request(txt_input):
@@ -50,19 +55,13 @@ def chatbot_request(txt_input):
     except InvalidArgument:
         raise
 
-    print("Query Text : ", response.query_result.query_text)
-    print("Detected intent : ", response.query_result.intent.display_name)
-    print("Detected intent confidence : ", response.query_result.intent_detection_confidence)
-    print("Fulfillment text : ", response.query_result.fulfillment_text)
+    # print("Query Text : ", response.query_result.query_text)
+    # print("Detected intent : ", response.query_result.intent.display_name)
+    # print("Detected intent confidence : ", response.query_result.intent_detection_confidence)
+    # print("Fulfillment text : ", response.query_result.fulfillment_text)
 
     return response.query_result.fulfillment_text
 
 
-@app.route('/input', methods=['POST'])
-def input():
-    print(request.get_text())  # parse as text
-    return 'OK', 200
-
-
 if __name__ == "__main__":
-    app.run()
+    app.run(host='0.0.0.0')
