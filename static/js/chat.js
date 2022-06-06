@@ -63,13 +63,13 @@ $(function () {
                         extracted('yourmsg', '1.' + array1[0] + ' 2.' + array1[1]);
                     } else if (array2.length > 0) {
                         extracted('yourmsg', '8강');
-                        extracted('yourmsg', '1.' + array2[0] + ' 2. ' + array2[1]);
+                        extracted('yourmsg', '1.' + array2[0] + ' 2.' + array2[1]);
                     } else if (array3.length > 0) {
                         extracted('yourmsg', '준결승');
-                        extracted('yourmsg', '1.' + array3[0] + ' 2. ' + array3[1]);
+                        extracted('yourmsg', '1.' + array3[0] + ' 2.' + array3[1]);
                     } else if (array4.length > 0) {
                         extracted('yourmsg', '결승');
-                        extracted('yourmsg', '1.' + array4[0] + ' 2. ' + array4[1]);
+                        extracted('yourmsg', '1.' + array4[0] + ' 2.' + array4[1]);
                     } else if (result.length !== 0) {
                         extracted('yourmsg', '당신의 가장 중요한 가치관은 ' + result + '입니다');
                     }
