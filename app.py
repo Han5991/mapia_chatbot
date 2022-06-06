@@ -38,7 +38,6 @@ def chatbot_request(txt_input):
 
     print("Query Text : ", response.query_result.query_text)
     print("Detected intent : ", response.query_result.intent.display_name)
-    print("Detected intent confidence : ", response.query_result.intent_detection_confidence)
     print("Fulfillment text : ", response.query_result.fulfillment_text)
     try:
         print('entities : ', response.query_result.parameters['values'])

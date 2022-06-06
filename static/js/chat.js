@@ -33,7 +33,7 @@ $(function () {
             let _val = $(this).val();
             f(_val).then((value) => {
                 extracted('mymsg', _val);
-                if (result === '' && result.length !== 0) {
+                if (result === '' && result.length !== 0 || value.intentName === 'Default Fallback Intent') {
                     extracted('yourmsg', value.response);
                 }
 
@@ -71,7 +71,7 @@ $(function () {
                         extracted('yourmsg', '결승');
                         extracted('yourmsg', '1.' + array4[0] + ' 2.' + array4[1]);
                     } else if (result.length !== 0) {
-                        extracted('yourmsg', '당신의 가장 중요한 가치관은 ' + result + '입니다');
+                        extracted('yourmsg', '당신의 가장 중요한 가치관은 ' + result + '입니다. 👏👏👏👏👏👏');
                     }
                 }
             });
