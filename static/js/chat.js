@@ -110,5 +110,4 @@ $(function () {
             }),
         }).then(response => response.json());
     }
-
 });
