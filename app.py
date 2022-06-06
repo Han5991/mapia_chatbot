@@ -12,7 +12,7 @@ def index_page_landing():
         result = chatbot_request(request.get_json()['input'])
         response = {
             'response': result.fulfillment_text,
-            'intenName': result.intent.display_name
+            'intentName': result.intent.display_name
         }
         try:
             response['entity'] = result.parameters['values']
