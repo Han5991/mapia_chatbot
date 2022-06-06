@@ -9,9 +9,18 @@ app = Flask(__name__)
 @app.route('/', methods=['GET', 'POST'])
 def index_page_landing():
     if request.method == "POST":
-        return jsonify({"response": chatbot_request(request.get_json()['input'])})
-    else:
+        result = chatbot_request(request.get_json()['input'])
+        response = {
+            'response': result.fulfillment_text,
+            'intenName': result.intent.display_name
+        }
+        try:
+            response['entity'] = result.parameters['values']
+        except Exception:
+            pass
 
+        return jsonify(response)
+    else:
         return render_template('chat.html')
 
 
@@ -20,9 +29,8 @@ def chatbot_request(txt_input):
 
     session_client = dfw.SessionsClient()
     session = session_client.session_path('newagent-fwew', 'mine')
-    text_input = dfw.types.TextInput(text=txt_input, language_code='ko')
-    query_input = dfw.types.QueryInput(text=text_input)
-
+    text_input = dfw.TextInput(text=txt_input, language_code='ko')
+    query_input = dfw.QueryInput(text=text_input)
     try:
         response = session_client.detect_intent(session=session, query_input=query_input)
     except InvalidArgument:
@@ -32,9 +40,13 @@ def chatbot_request(txt_input):
     print("Detected intent : ", response.query_result.intent.display_name)
     print("Detected intent confidence : ", response.query_result.intent_detection_confidence)
     print("Fulfillment text : ", response.query_result.fulfillment_text)
+    try:
+        print('entities : ', response.query_result.parameters['values'])
+    except Exception:
+        pass
 
-    return response.query_result.fulfillment_text
+    return response.query_result
 
 
 if __name__ == "__main__":
-    app.run(host='0.0.0.0')
+    app.run(debug=True)
